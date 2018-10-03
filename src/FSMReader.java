@@ -5,9 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class FSMReader {
+class FSMReader {
     private static File _chooseFile() {
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser =
+                new JFileChooser("D:\\Users\\kutsenkoivan99\\Documents\\Education\\5 семестр\\Системне програмування\\Lab2");
         int dialogResult = fileChooser.showDialog(null, "Open File");
         File file;
         if (dialogResult == JFileChooser.APPROVE_OPTION) {
@@ -22,7 +23,7 @@ public class FSMReader {
         return _chooseFile().getPath();
     }
 
-    public static FiniteStateMachine GetFSMFromFile() {
+    static FiniteStateMachine GetFSMFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader(_getFilePath()))) {
             br.readLine();
 
@@ -33,22 +34,22 @@ public class FSMReader {
             String[] finalIndexes = br.readLine().substring(2).split("\\s+");
             for (int i = 0; i < states.length; i++) {
                 if (Arrays.asList(finalIndexes).contains(Integer.toString(i))) {
-                    states[i] = new RtState(true);
+                    states[i] = new State(true);
                 } else {
-                    states[i] = new RtState();
+                    states[i] = new State();
                 }
             }
 
             String sCurrentLine;
             while ((sCurrentLine = br.readLine()) != null) {
                 states[Integer.parseInt(sCurrentLine.split("\\s+")[0])]
-                        .with(new RtTransition(
+                        .with(new Transition(
                                 sCurrentLine.split("\\s+")[1],
                                 states[Integer.parseInt(sCurrentLine.split("\\s+")[2])]
                         ));
             }
 
-            return new RtFiniteStateMachine(states[firstIndex]);
+            return new FiniteStateMachine(states[firstIndex]);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
